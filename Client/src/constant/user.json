@@ -1,0 +1,38 @@
+[{
+    "id": 1,
+    "name": "Jolyn",
+    "lunch": false,
+    "snack": true,
+    "email": "jdelaharpe0@admin.ch"
+  }, {
+    "id": 2,
+    "name": "Kelby",
+    "lunch": true,
+    "snack": false,
+    "email": "khandsheart1@dagondesign.com"
+  }, {
+    "id": 3,
+    "name": "Fabe",
+    "lunch": true,
+    "snack": false,
+    "email": "fgerssam2@tmall.com"
+  }, {
+    "id": 4,
+    "name": "Barrie",
+    "lunch": false,
+    "snack": true,
+    "email": "bstreatley3@cbslocal.com"
+  }, {
+    "id": 5,
+    "name": "Nichole",
+    "lunch": false,
+    "snack": false,
+    "email": "nshilling4@msu.edu"
+  }, {
+    "id": 6,
+    "name": "Jacintha",
+    "lunch": true,
+    "snack": false,
+    "email": "jbletcher5@upenn.edu"
+  }]
+  

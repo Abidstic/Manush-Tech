@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  name     String?
+  isBanned Boolean @default(false)
+  roleId   Int
+  orders   Order[]
+  role     Role    @relation(fields: [roleId], references: [id])
+
+  @@map("users")
+}
+
+model Role {
+  id       Int     @id @default(autoincrement())
+  roleName String  @unique
+  users    Users[]
+
+  @@map("roles")
+}
+
+model Item {
+  id       Int        @id @default(autoincrement())
+  itemName String
+  category String
+  meals    MealItem[]
+
+  @@map("items")
+}
+
+model Meal {
+  id        Int            @id @default(autoincrement())
+  mealName  String
+  items     MealItem[]
+  schedules MealSchedule[]
+
+  @@map("meals")
+}
+
+model MealItem {
+  mealId Int
+  itemId Int
+  item   Item @relation(fields: [itemId], references: [id])
+  meal   Meal @relation(fields: [mealId], references: [id])
+
+  @@id([mealId, itemId])
+  @@map("meal_items")
+}
+
+model MealSchedule {
+  id        Int     @id @default(autoincrement())
+  mealId    Int
+  dayOfWeek String
+  meal      Meal    @relation(fields: [mealId], references: [id])
+  orders    Order[]
+
+  @@map("meal_schedules")
+}
+
+model Order {
+  id           Int          @id @default(autoincrement())
+  userId       Int
+  scheduleId   Int
+  orderDate    DateTime
+  mealSchedule MealSchedule @relation(fields: [scheduleId], references: [id])
+  user         Users        @relation(fields: [userId], references: [id])
+
+  @@map("orders")
+}
