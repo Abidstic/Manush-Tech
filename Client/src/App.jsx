@@ -4,6 +4,7 @@ import Signin from './components/Auth/SignIn';
 import UserList from './components/Admin/UserManagement';
 import ItemManagement from './components/Admin/ItemManagemnet';
 import MealSchedule from './components/Admin/MealSchedule';
+import Dashboard from './layout/Dashboard';
 
 import './App.css';
 import './index.css';
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
     {
         path: '/orders',
         element: <MealSchedule />,
+    },
+    {
+        path: '*',
+        element: <Dashboard />,
     },
 ]);
 

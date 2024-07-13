@@ -1,27 +1,14 @@
-[
-    {
-        "id": 1,
-        "date": "2024-07-22",
-        "starch": "Rice",
-        "protein": "Chicken Curry"
-    },
-    {
-        "id": 2,
-        "date": "2024-07-23",
-        "starch": "Potato Bhorta",
-        "protein": "Fish Curry"
-    },
-    { "id": 3, "date": "2024-07-24", "starch": "Daal", "protein": "Egg Curry" },
-    {
-        "id": 4,
-        "date": "2024-07-25",
-        "starch": "Rice",
-        "protein": "Chicken Curry"
-    },
-    {
-        "id": 5,
-        "date": "2024-07-26",
-        "starch": "Potato Bhorta",
-        "protein": "Fish Curry"
-    }
-]
+{
+    "rice": [
+        { "id": 1, "name": "White Rice" },
+        { "id": 2, "name": "Brown Rice" },
+        { "id": 3, "name": "Fried Rice" }
+    ],
+    "protein": [
+        { "id": 1, "name": "Chicken Curry" },
+        { "id": 2, "name": "Fish Curry" },
+        { "id": 3, "name": "Egg Curry" },
+        { "id": 4, "name": "Beef Curry" },
+        { "id": 5, "name": "Vegetable Curry" }
+    ]
+}
