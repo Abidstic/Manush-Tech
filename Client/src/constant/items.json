@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "Chicken Curry",
+        "category": "Protein"
+    },
+    {
+        "id": 2,
+        "name": "Rice",
+        "category": "Starch"
+    },
+    {
+        "id": 3,
+        "name": "Fish Curry",
+        "category": "Protein"
+    },
+    {
+        "id": 4,
+        "name": "Egg Curry",
+        "category": "Protein"
+    },
+    {
+        "id": 5,
+        "name": "Egg Bhorta",
+        "category": "Protein"
+    },
+    {
+        "id": 6,
+        "name": "Potato Bhorta",
+        "category": "Vegetables"
+    },
+    {
+        "id": 7,
+        "name": "Daal",
+        "category": "Soup"
+    },
+    {
+        "id": 8,
+        "name": "Begun Bhaji",
+        "category": "Vegetables"
+    }
+]

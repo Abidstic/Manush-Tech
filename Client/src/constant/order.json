@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "date": "2024-07-22",
+        "starch": "Rice",
+        "protein": "Chicken Curry"
+    },
+    {
+        "id": 2,
+        "date": "2024-07-23",
+        "starch": "Potato Bhorta",
+        "protein": "Fish Curry"
+    },
+    { "id": 3, "date": "2024-07-24", "starch": "Daal", "protein": "Egg Curry" },
+    {
+        "id": 4,
+        "date": "2024-07-25",
+        "starch": "Rice",
+        "protein": "Chicken Curry"
+    },
+    {
+        "id": 5,
+        "date": "2024-07-26",
+        "starch": "Potato Bhorta",
+        "protein": "Fish Curry"
+    }
+]
