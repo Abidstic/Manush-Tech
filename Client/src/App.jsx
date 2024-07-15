@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Signup from './components/Auth/SignUp';
 import Signin from './components/Auth/SignIn';
 import UserList from './components/Admin/UserManagement';
-import ItemManagement from './components/Admin/ItemManagemnet';
+import ItemManagement from './components/Admin/ItemManagement';
 import MealSchedule from './components/Admin/MealSchedule';
 import Dashboard from './layout/Dashboard';
 import MealOrderPage from './components/MealOrder';

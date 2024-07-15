@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 export default function Signup() {
     const [values, setValues] = useState({
@@ -7,7 +8,6 @@ export default function Signup() {
         password: '',
         confirmPassword: '',
     });
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setValues((prevValues) => ({
@@ -16,10 +16,30 @@ export default function Signup() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted with values:', values);
-        // Add your logic for form submission (e.g., axios request)
+
+        if (
+            values.name &&
+            values.password &&
+            values.email &&
+            values.confirmPassword
+        ) {
+            try {
+                const response = await axios.post(
+                    'http://localhost:8000/api/user/register',
+                    values
+                );
+
+                const { userId, token } = response.data;
+                console.log('login Successful');
+
+                localStorage.setItem('userId', userId);
+                localStorage.setItem('token', token);
+            } catch (error) {
+                console.error('Signup Error:', error);
+            }
+        }
     };
 
     return (
@@ -75,6 +95,7 @@ export default function Signup() {
                     </div>
                     <button
                         type="submit"
+                        onClick={handleSubmit}
                         className="w-full py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
                     >
                         Sign Up

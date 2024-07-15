@@ -13,7 +13,7 @@ model Users {
   password String
   name     String?
   isBanned Boolean @default(false)
-  roleId   Int
+  roleId   Int @default(2)
   orders   Order[]
   role     Role    @relation(fields: [roleId], references: [id])
 
@@ -30,31 +30,34 @@ model Role {
 
 model Item {
   id       Int        @id @default(autoincrement())
-  itemName String
+  itemName String     @unique
   category String
   meals    MealItem[]
-
   @@map("items")
 }
 
 model Meal {
-  id        Int            @id @default(autoincrement())
-  mealName  String
-  items     MealItem[]
-  schedules MealSchedule[]
+  id         Int         @id @default(autoincrement())
+  mealName   String      @unique
+  mealItems      MealItem[]
+  schedules  MealSchedule[]
 
   @@map("meals")
 }
 
+
 model MealItem {
+  id Int @id @default(autoincrement())
   mealId Int
   itemId Int
   item   Item @relation(fields: [itemId], references: [id])
   meal   Meal @relation(fields: [mealId], references: [id])
 
-  @@id([mealId, itemId])
+  
   @@map("meal_items")
 }
+
+
 
 model MealSchedule {
   id        Int     @id @default(autoincrement())

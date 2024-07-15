@@ -1,34 +1,86 @@
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import mealData from '../../constant/order.json';
+import axios from 'axios';
 
 const MealScheduleComponent = () => {
     const [currentWeek, setCurrentWeek] = useState(dayjs().startOf('week'));
     const [mealSchedule, setMealSchedule] = useState({});
+    const [isAdmin, setIsAdmin] = useState(false); // Assume we have a way to determine if the user is an admin
+    const [mealData, setMealData] = useState({ rice: [], protein: [] }); // State to store meal options
 
     useEffect(() => {
         fetchMealSchedule(currentWeek);
+        fetchMealData(); // Fetch meal options when component mounts
     }, [currentWeek]);
 
     const fetchMealSchedule = async (startDate) => {
-        // TODO: Implement API call to fetch meal schedule data
-        const mockSchedule = {};
-        for (let i = 0; i < 7; i++) {
-            const date = startDate.add(i, 'day').format('YYYY-MM-DD');
-            mockSchedule[date] = {
-                rice: Math.floor(Math.random() * mealData.rice.length) + 1,
-                protein:
-                    Math.floor(Math.random() * mealData.protein.length) + 1,
-            };
+        try {
+            const userId = localStorage.getItem('userId'); // Assume we store user ID in localStorage
+            const endpoint = isAdmin
+                ? '/api/schedule/all'
+                : `/api/schedule/user/${userId}`;
+            const response = await axios.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`, // Assume we store JWT in localStorage
+                },
+            });
+
+            const formattedSchedule = {};
+            response.data.forEach((choice) => {
+                const date = dayjs(choice.orderDate).format('YYYY-MM-DD');
+                if (!formattedSchedule[date]) {
+                    formattedSchedule[date] = {};
+                }
+                formattedSchedule[date][choice.mealSchedule.meal.type] =
+                    choice.mealSchedule.meal.id;
+            });
+
+            setMealSchedule(formattedSchedule);
+        } catch (error) {
+            console.error('Error fetching meal schedule:', error);
+            // Handle error (e.g., show error message to user)
         }
-        setMealSchedule(mockSchedule);
     };
 
-    const handleMealSelection = (date, type, id) => {
-        setMealSchedule((prev) => ({
-            ...prev,
-            [date]: { ...prev[date], [type]: id },
-        }));
+    const fetchMealData = async () => {
+        try {
+            const response = await axios.get('/api/meals'); // Replace with your actual endpoint to fetch meal options
+            setMealData({
+                rice: response.data.rice,
+                protein: response.data.protein,
+            });
+        } catch (error) {
+            console.error('Error fetching meal data:', error);
+            // Handle error (e.g., show error message to user)
+        }
+    };
+
+    const handleMealSelection = async (date, type, id) => {
+        try {
+            await axios.post(
+                '/api/schedule/update',
+                {
+                    date,
+                    mealType: type,
+                    mealId: id,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            'token'
+                        )}`,
+                    },
+                }
+            );
+
+            setMealSchedule((prev) => ({
+                ...prev,
+                [date]: { ...prev[date], [type]: id },
+            }));
+        } catch (error) {
+            console.error('Error updating meal selection:', error);
+            // Handle error (e.g., show error message to user)
+        }
     };
 
     const renderMealSelector = (date, type) => {
@@ -44,11 +96,15 @@ const MealScheduleComponent = () => {
                 className="w-full p-2 mt-1 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
                 <option value="">Select {type}</option>
-                {items.map((item) => (
-                    <option key={item.id} value={item.id}>
-                        {item.name}
-                    </option>
-                ))}
+                {items && items.length > 0 ? (
+                    items.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.name}
+                        </option>
+                    ))
+                ) : (
+                    <option disabled>Loading...</option>
+                )}
             </select>
         );
     };

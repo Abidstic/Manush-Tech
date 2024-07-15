@@ -1,40 +1,86 @@
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import mealData from '../constant/order.json';
+import axios from 'axios';
 
 const MealOrderPage = () => {
-    const [mealSchedule, setMealSchedule] = useState([]);
+    const [mealSchedule, setMealSchedule] = useState({});
     const [selectedMeals, setSelectedMeals] = useState({});
     const [currentWeek, setCurrentWeek] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Initialize the week with today's date
         const today = dayjs().startOf('day');
         const week = Array.from({ length: 7 }, (_, i) => today.add(i, 'day'));
         setCurrentWeek(week);
-        // Fetch meal schedule (dummy data for now)
-        setMealSchedule(mealData);
+        fetchWeeklySchedule();
     }, []);
 
-    const handleMealChange = (day, category, meal) => {
+    const fetchWeeklySchedule = async () => {
+        try {
+            const response = await axios.get(
+                'http://localhost:8000/api/order/weekly-schedule'
+            );
+            if (response.data && typeof response.data === 'object') {
+                setMealSchedule(response.data);
+            } else {
+                throw new Error('Unexpected data format from API');
+            }
+        } catch (error) {
+            console.error('Error fetching weekly schedule:', error);
+            setError('Failed to fetch meal schedule. Please try again later.');
+        }
+    };
+
+    const handleMealChange = (day, mealId) => {
         setSelectedMeals({
             ...selectedMeals,
-            [day]: {
-                ...selectedMeals[day],
-                [category]: meal,
-            },
+            [day]: mealId,
         });
     };
 
-    const handleSaveMeals = () => {
-        console.log('Saved Meals:', selectedMeals);
-        // Save logic here (API call, etc.)
+    const handleSaveMeal = async (day) => {
+        const mealId = selectedMeals[day];
+        if (!mealId) return;
+
+        try {
+            await axios.post('http://localhost:8000/api/order/update-choice', {
+                userId: 1, // Assuming user ID is 1 for this example
+                scheduleId: mealId,
+                orderDate: day,
+            });
+            console.log('Meal saved successfully for', day);
+        } catch (error) {
+            console.error('Error saving meal:', error);
+            setError('Failed to save meal. Please try again.');
+        }
+    };
+
+    const handleScheduleMonth = async () => {
+        const currentMonth = dayjs().month() + 1;
+        const currentYear = dayjs().year();
+
+        try {
+            await axios.post('http://localhost:8000/api/order/schedule-month', {
+                userId: 1, // Assuming user ID is 1 for this example
+                month: currentMonth,
+                year: currentYear,
+                mealChoices: selectedMeals,
+            });
+            console.log('Monthly meals scheduled successfully');
+        } catch (error) {
+            console.error('Error scheduling monthly meals:', error);
+            setError('Failed to schedule monthly meals. Please try again.');
+        }
     };
 
     const isPastDay = (day) => {
         const today = dayjs().startOf('day');
         return day.isBefore(today);
     };
+
+    if (error) {
+        return <div className="text-red-500">{error}</div>;
+    }
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
@@ -45,21 +91,23 @@ const MealOrderPage = () => {
                 <div className="flex justify-between mb-4">
                     <button
                         className="px-4 py-2 rounded-lg bg-blue-500 text-white"
-                        onClick={() =>
+                        onClick={() => {
                             setCurrentWeek(
                                 currentWeek.map((day) => day.subtract(7, 'day'))
-                            )
-                        }
+                            );
+                            fetchWeeklySchedule();
+                        }}
                     >
                         Previous Week
                     </button>
                     <button
                         className="px-4 py-2 rounded-lg bg-blue-500 text-white"
-                        onClick={() =>
+                        onClick={() => {
                             setCurrentWeek(
                                 currentWeek.map((day) => day.add(7, 'day'))
-                            )
-                        }
+                            );
+                            fetchWeeklySchedule();
+                        }}
                     >
                         Next Week
                     </button>
@@ -70,55 +118,48 @@ const MealOrderPage = () => {
                             <th className="py-2 px-4 border-b border-gray-600 text-left">
                                 Day
                             </th>
-                            {Object.keys(mealData).map((category) => (
-                                <th
-                                    key={category}
-                                    className="py-2 px-4 border-b border-gray-600 text-left"
-                                >
-                                    {category}
-                                </th>
-                            ))}
+                            <th className="py-2 px-4 border-b border-gray-600 text-left">
+                                Meal
+                            </th>
                             <th className="py-2 px-4 border-b border-gray-600 text-left">
                                 Actions
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {currentWeek.map((day) => (
-                            <tr key={day.format()}>
-                                <td className="py-2 px-4 border-b border-gray-600">
-                                    {day.format('dddd, MMM D')}
-                                </td>
-                                {Object.keys(mealData).map((category) => (
-                                    <td
-                                        key={category}
-                                        className="py-2 px-4 border-b border-gray-600"
-                                    >
+                        {currentWeek.map((day) => {
+                            const dayOfWeek = day.format('dddd');
+                            const meals = mealSchedule[dayOfWeek] || [];
+                            return (
+                                <tr key={day.format()}>
+                                    <td className="py-2 px-4 border-b border-gray-600">
+                                        {day.format('dddd, MMM D')}
+                                    </td>
+                                    <td className="py-2 px-4 border-b border-gray-600">
                                         <select
                                             disabled={isPastDay(day)}
                                             value={
                                                 selectedMeals[
                                                     day.format('YYYY-MM-DD')
-                                                ]?.[category] || ''
+                                                ] || ''
                                             }
                                             onChange={(e) =>
                                                 handleMealChange(
                                                     day.format('YYYY-MM-DD'),
-                                                    category,
                                                     e.target.value
                                                 )
                                             }
                                             className="w-full px-4 py-2 mb-4 rounded-lg bg-gray-700 text-white outline-none"
                                         >
                                             <option value="">
-                                                Select {category}
+                                                Select Meal
                                             </option>
-                                            {mealData[category].map((meal) => (
+                                            {meals.map((meal) => (
                                                 <option
                                                     key={meal.id}
-                                                    value={meal.name}
+                                                    value={meal.id}
                                                 >
-                                                    {meal.name}
+                                                    {meal.mealName}
                                                 </option>
                                             ))}
                                             <option value="No Meal">
@@ -126,19 +167,32 @@ const MealOrderPage = () => {
                                             </option>
                                         </select>
                                     </td>
-                                ))}
-                                <td className="py-2 px-4 border-b border-gray-600">
-                                    <button
-                                        className="px-4 py-2 rounded-lg bg-green-500 text-white"
-                                        onClick={handleSaveMeals}
-                                    >
-                                        Save
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    <td className="py-2 px-4 border-b border-gray-600">
+                                        <button
+                                            className="px-4 py-2 rounded-lg bg-green-500 text-white"
+                                            onClick={() =>
+                                                handleSaveMeal(
+                                                    day.format('YYYY-MM-DD')
+                                                )
+                                            }
+                                            disabled={isPastDay(day)}
+                                        >
+                                            Save
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
+                <div className="mt-4">
+                    <button
+                        className="px-4 py-2 rounded-lg bg-purple-500 text-white"
+                        onClick={handleScheduleMonth}
+                    >
+                        Schedule for Entire Month
+                    </button>
+                </div>
             </div>
         </div>
     );
