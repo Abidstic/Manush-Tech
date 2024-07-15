@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-    // Seed Roles
+  
     const roles = [{ roleName: 'Admin' }, { roleName: 'User' }];
 
     for (const role of roles) {
@@ -15,7 +15,7 @@ async function main() {
         });
     }
 
-    // Seed Users
+ 
     const adminRole = await prisma.role.findUnique({
         where: { roleName: 'Admin' },
     });
@@ -63,7 +63,7 @@ async function main() {
         });
     }
 
-    // Seed Items
+   
     const items = [
         { itemName: 'Chicken Curry', category: 'Protein' },
         { itemName: 'Rice', category: 'Starch' },
@@ -83,7 +83,7 @@ async function main() {
         });
     }
 
-    // Seed Meals
+
     const meals = [
         { mealName: 'Breakfast' },
         { mealName: 'Lunch' },
@@ -98,7 +98,7 @@ async function main() {
         });
     }
 
-    // Seed MealItems (associating items with meals)
+
     const breakfast = await prisma.meal.findUnique({
         where: { mealName: 'Breakfast' },
     });
@@ -129,7 +129,7 @@ async function main() {
         });
     }
 
-    // Seed MealSchedules (for a week)
+   
     const daysOfWeek = [
         'Sunday',
         'Monday',
@@ -152,7 +152,7 @@ async function main() {
         });
     }
 
-    // Seed Orders
+
     const user1 = await prisma.users.findUnique({
         where: { email: 'user1@example.com' },
     });
@@ -162,7 +162,7 @@ async function main() {
 
     const schedules = await prisma.mealSchedule.findMany();
 
-    // Create orders for the next 7 days
+
     for (let i = 0; i < 7; i++) {
         const orderDate = new Date();
         orderDate.setDate(orderDate.getDate() + i);
@@ -170,7 +170,7 @@ async function main() {
         await prisma.order.create({
             data: {
                 userId: user1.id,
-                scheduleId: schedules[i * 3].id, // Breakfast
+                scheduleId: schedules[i * 3].id, 
                 orderDate,
             },
         });
@@ -178,7 +178,7 @@ async function main() {
         await prisma.order.create({
             data: {
                 userId: user2.id,
-                scheduleId: schedules[i * 3 + 1].id, // Lunch
+                scheduleId: schedules[i * 3 + 1].id, 
                 orderDate,
             },
         });

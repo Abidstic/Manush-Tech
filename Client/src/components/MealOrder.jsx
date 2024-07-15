@@ -44,7 +44,7 @@ const MealOrderPage = () => {
 
         try {
             await axios.post('http://localhost:8000/api/order/update-choice', {
-                userId: 1, // Assuming user ID is 1 for this example
+                userId: 1, 
                 scheduleId: mealId,
                 orderDate: day,
             });
@@ -61,7 +61,7 @@ const MealOrderPage = () => {
 
         try {
             await axios.post('http://localhost:8000/api/order/schedule-month', {
-                userId: 1, // Assuming user ID is 1 for this example
+                userId: 1,
                 month: currentMonth,
                 year: currentYear,
                 mealChoices: selectedMeals,

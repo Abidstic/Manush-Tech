@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator';
 
 const prisma = new PrismaClient();
 
-// View weekly meal schedules
+
 export async function getWeeklyMealSchedule(req, res) {
     try {
         const weeklySchedule = await prisma.mealSchedule.findMany({
@@ -35,7 +35,7 @@ export async function getWeeklyMealSchedule(req, res) {
     }
 }
 
-// Select and update meal choices
+
 export async function updateMealChoice(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -77,7 +77,7 @@ export async function updateMealChoice(req, res) {
     }
 }
 
-// Schedule meals for an entire month
+
 export async function scheduleMonthlyMeals(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -119,7 +119,7 @@ export async function scheduleMonthlyMeals(req, res) {
     }
 }
 
-// Get user's meal orders
+
 export async function getUserMealOrders(req, res) {
     const userId = req.params.userId;
 

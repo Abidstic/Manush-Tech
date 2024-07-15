@@ -103,11 +103,11 @@ export default function ItemManagement() {
             (error.response.status === 401 || error.response.status === 403)
         ) {
             console.log('Unauthorized access. Redirecting to login...');
-            // Implement your redirect logic here
+            
         }
     };
 
-    // Calculate pagination
+  
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = itemList.slice(indexOfFirstItem, indexOfLastItem);

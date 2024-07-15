@@ -5,10 +5,9 @@ import { isAdmin } from '../middleware/AuthAdmin.js';
 
 const prisma = new PrismaClient();
 
-// Function to get all meal choices for all users (admin only)
 export const getMealChoicesForAllUsers = async (req, res) => {
     try {
-        // Check if the user is an admin
+        
         if (!isAdmin(req.user)) {
             return res
                 .status(403)
@@ -51,12 +50,12 @@ export const getMealChoicesForAllUsers = async (req, res) => {
     }
 };
 
-// Function to get meal choices for a specific user (admin or self)
+
 export const getMealChoicesForUser = async (req, res) => {
     try {
         const userId = parseInt(req.params.userId);
 
-        // Check if the user is an admin or the user is requesting their own data
+        
         if (!isAdmin(req.user) && req.user.id !== userId) {
             return res.status(403).json({ message: 'Access denied.' });
         }

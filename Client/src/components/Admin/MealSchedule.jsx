@@ -5,23 +5,23 @@ import axios from 'axios';
 const MealScheduleComponent = () => {
     const [currentWeek, setCurrentWeek] = useState(dayjs().startOf('week'));
     const [mealSchedule, setMealSchedule] = useState({});
-    const [isAdmin, setIsAdmin] = useState(false); // Assume we have a way to determine if the user is an admin
-    const [mealData, setMealData] = useState({ rice: [], protein: [] }); // State to store meal options
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [mealData, setMealData] = useState({ rice: [], protein: [] }); 
 
     useEffect(() => {
         fetchMealSchedule(currentWeek);
-        fetchMealData(); // Fetch meal options when component mounts
+        fetchMealData(); 
     }, [currentWeek]);
 
     const fetchMealSchedule = async (startDate) => {
         try {
-            const userId = localStorage.getItem('userId'); // Assume we store user ID in localStorage
+            const userId = localStorage.getItem('userId'); 
             const endpoint = isAdmin
                 ? '/api/schedule/all'
                 : `/api/schedule/user/${userId}`;
             const response = await axios.get(endpoint, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`, // Assume we store JWT in localStorage
+                    Authorization: `Bearer ${localStorage.getItem('token')}`, 
                 },
             });
 
@@ -38,20 +38,20 @@ const MealScheduleComponent = () => {
             setMealSchedule(formattedSchedule);
         } catch (error) {
             console.error('Error fetching meal schedule:', error);
-            // Handle error (e.g., show error message to user)
+           
         }
     };
 
     const fetchMealData = async () => {
         try {
-            const response = await axios.get('/api/meals'); // Replace with your actual endpoint to fetch meal options
+            const response = await axios.get('/api/meals'); 
             setMealData({
                 rice: response.data.rice,
                 protein: response.data.protein,
             });
         } catch (error) {
             console.error('Error fetching meal data:', error);
-            // Handle error (e.g., show error message to user)
+          
         }
     };
 
@@ -79,7 +79,7 @@ const MealScheduleComponent = () => {
             }));
         } catch (error) {
             console.error('Error updating meal selection:', error);
-            // Handle error (e.g., show error message to user)
+            
         }
     };
 

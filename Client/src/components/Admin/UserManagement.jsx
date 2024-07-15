@@ -36,7 +36,7 @@ export default function UserList() {
             (error.response.status === 401 || error.response.status === 403)
         ) {
             console.log('Unauthorized access. Redirecting to login...');
-            // Implement your redirect logic here
+            
         }
     };
 
@@ -65,7 +65,7 @@ export default function UserList() {
         try {
             await axios.put(
                 `http://localhost:8000/api/user/update/${id}`,
-                { role: parseInt(newRole) }, // Send role as integer ID
+                { role: parseInt(newRole) }, 
                 {
                     headers: getAuthHeader(),
                 }
@@ -97,8 +97,8 @@ export default function UserList() {
         try {
             const dataToSend = {
                 ...editUser,
-                role: parseInt(editUser.role), // Convert role to integer ID
-                banned: editUser.banned || false, // Ensure banned is boolean
+                role: parseInt(editUser.role), 
+                banned: editUser.banned || false, 
             };
 
             if (editUser.id) {
@@ -126,7 +126,6 @@ export default function UserList() {
         }
     };
 
-    // Pagination
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
     const currentUsers = users
@@ -297,7 +296,7 @@ export default function UserList() {
                             />
                             <select
                                 name="role"
-                                value={editUser?.role || '2'} // Default to User if role is not set
+                                value={editUser?.role || '2'} 
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 rounded-lg bg-gray-600 text-white outline-none"
                             >

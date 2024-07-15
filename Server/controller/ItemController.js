@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator';
 
 const prisma = new PrismaClient();
 
-// Get all items
+
 export async function getAllItems(req, res) {
     try {
         const items = await prisma.item.findMany();
@@ -14,7 +14,7 @@ export async function getAllItems(req, res) {
     }
 }
 
-// Create a new item
+
 export async function createItem(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -33,7 +33,7 @@ export async function createItem(req, res) {
     }
 }
 
-// Update an existing item
+
 export async function updateItem(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -54,7 +54,7 @@ export async function updateItem(req, res) {
     }
 }
 
-// Delete an item
+
 export async function deleteItem(req, res) {
     const { id } = req.params;
     try {
@@ -68,7 +68,7 @@ export async function deleteItem(req, res) {
     }
 }
 
-// Get items by category
+
 export async function getItemsByCategory(req, res) {
     const { category } = req.params;
     try {
